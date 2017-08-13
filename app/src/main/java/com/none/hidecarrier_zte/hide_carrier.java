@@ -18,40 +18,29 @@ public class hide_carrier implements IXposedHookLoadPackage {
             return;
         }
 
-        findAndHookMethod("com.android.systemui.statusbar.phone.PhoneStatusBar", loadPackageParam.classLoader, "updateCarrierLabelVisibility", new XC_MethodHook() {
+        findAndHookMethod("com.android.keyguard.CarrierText", loadPackageParam.classLoader, "updateText", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                //XposedBridge.log("after carriervisibility!");
-
-                View mCarrierLabel = (View) XposedHelpers.getObjectField(param.thisObject, "mCarrierLabel");
-
-                if (mCarrierLabel == null)
-                    return;
-
-                //XposedBridge.log("kill carrier(visibility).");
-                mCarrierLabel.setVisibility(View.GONE);
-            }
-        });
-
-        findAndHookMethod("com.android.keyguard.CarrierText", loadPackageParam.classLoader, "showWhich", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                //XposedBridge.log("after showwhich!");
+                //XposedBridge.log("after updatetext!");
 
                 Integer mNumPhones = (Integer) XposedHelpers.getObjectField(param.thisObject, "mNumPhones");
-                TextView[] mOperatorName = new TextView[mNumPhones];
-                mOperatorName = (TextView[]) XposedHelpers.getObjectField(param.thisObject, "mOperatorName");
-
-                if (mOperatorName == null)
+                if (mNumPhones == 0)
                     return;
 
-                //XposedBridge.log("kill carrier(showwhich).");
-                mOperatorName[0].setVisibility(TextView.GONE);
+                TextView[] mCarrierName = new TextView[mNumPhones];
+                mCarrierName = (TextView[]) XposedHelpers.getObjectField(param.thisObject, "mCarrierName");
+
+                if (mCarrierName == null)
+                    return;
+
+                //XposedBridge.log("kill carrier(updatetext).");
+
+                mCarrierName[0].setVisibility(TextView.GONE);
                 if (mNumPhones == 2)
                 {
                     TextView sepTextView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mOperatorSeparator");
                     sepTextView.setVisibility(TextView.GONE);
-                    mOperatorName[1].setVisibility(TextView.GONE);
+                    mCarrierName[1].setVisibility(TextView.GONE);
                 }
             }
         });
