@@ -38,8 +38,8 @@ public class hide_carrier implements IXposedHookLoadPackage {
                 mCarrierName[0].setVisibility(TextView.GONE);
                 if (mNumPhones == 2)
                 {
-                    TextView sepTextView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mOperatorSeparator");
-                    sepTextView.setVisibility(TextView.GONE);
+                    //TextView sepTextView = (TextView) XposedHelpers.getObjectField(param.thisObject, "mOperatorSeparator");
+                    //sepTextView.setVisibility(TextView.GONE);
                     mCarrierName[1].setVisibility(TextView.GONE);
                 }
             }
